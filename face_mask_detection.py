@@ -25,11 +25,10 @@ for idx, mask_label in enumerate(mask_label_list):
         bw_threshold = 80
 
         # Baca image dari setiap full path image
-        
         img = cv2.imread(image_full_path, 0)
 
         # Convert image ke gray juga
-        img_gray = cv2.
+        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         # Convert image in black and white
         (thresh, img_bw) = cv2.threshold(img_gray, bw_threshold, 255, cv2.THRESH_BINARY)
@@ -42,6 +41,6 @@ for idx, mask_label in enumerate(mask_label_list):
 
         if (len(detected_faces_gray) == 0 and len(detected_faces_bw) == 0):
 
-            cv2.putText(img, text, (x, y), cv2.FONT_HERSHEY_PLAIN, 1.2, (0, 0, 255), 1)
+            cv2.putText(img, "No face found...", (30, 30), cv2.FONT_HERSHEY_PLAIN, 1.2, (0, 0, 255), 1)
 
 
