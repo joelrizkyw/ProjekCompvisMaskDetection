@@ -6,7 +6,7 @@ import os
 train_image_path = "assets/train/"
 
 # Cascade
-face_cascade = cv2.CascadeClassifier("./haarcascade/haarcascade_frontalface_default.xml")
+face_cascade = cv2.CascadeClassifier("./haarcascades/haarcascade_frontalface_default.xml")
 
 # Nama nama label
 mask_label_list = os.listdir(train_image_path)
