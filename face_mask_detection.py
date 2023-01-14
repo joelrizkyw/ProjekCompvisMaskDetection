@@ -11,6 +11,7 @@ face_cascade = cv2.CascadeClassifier("haarcascades/haarcascade_frontalface_defau
 mouth_cascade = cv2.CascadeClassifier("haarcascades/haarcascade_mcs_mouth.xml")
 
 faces_image_gray_list = []
+mouth_image_gray_list = []
 class_id_list = []
 
 # Nama nama label
@@ -27,8 +28,6 @@ for idx, mask_label in enumerate(mask_label_list):
 
         # Full path image
         image_full_path = image_path + "/" + image
-
-        print(image_full_path)
 
         # Adjust threshold value in range 80 to 105 based on your light.
         bw_threshold = 80
@@ -53,37 +52,59 @@ for idx, mask_label in enumerate(mask_label_list):
         # Detect faces gray
         detected_faces_gray = face_cascade.detectMultiScale(img_gray, scaleFactor = 1.2, minNeighbors = 3)
 
-
         # Detect faces black and white
         detected_faces_bw = face_cascade.detectMultiScale(img_bw, scaleFactor = 1.2, minNeighbors = 5)
 
-        
-        print("detected faces gray: ", len(detected_faces_gray))
-
-        # if (len(detected_faces_gray) == 0 and len(detected_faces_bw) == 0):
+        if (len(detected_faces_gray) == 0 and len(detected_faces_bw) == 0):
             
-        #     print("No mask found")
+            print(image, "No mask found")
 
-        # elif (len(detected_faces_gray) == 0 and len(detected_faces_bw) == 1):
+        elif (len(detected_faces_gray) == 0 and len(detected_faces_bw) == 1):
 
-        #     print("Mask detected")
+            print(image, "Mask detected")
 
-        # else:
+        else:
 
-        #     for face_rectangle in detected_faces_gray:
+            for face_rectangle in detected_faces_gray:
 
-        #         x, y, h, w = face_rectangle
+                x, y, h, w = face_rectangle
 
-        #         # Melakukan crop image dengan panjang (y:y+h) dan lebar (x:x+w)
-        #         faces_image = img[y:y + h, x:x + w]
-        #         faces_image_gray = img_gray[y:y + h, x:x + w]
+                # Melakukan crop image dengan panjang (y:y+h) dan lebar (x:x+w)
+                faces_image = img[y:y + h, x:x + w]
+                faces_image_gray = img_gray[y:y + h, x:x + w]
 
-        #         faces_image_gray_list.append(faces_image_gray)
-        #         class_id_list.append(idx)
+                faces_image_gray_list.append(faces_image_gray)
+                class_id_list.append(idx)
 
-                
-# face_recognizer = cv2.face.LBPHFaceRecognizer_create()
-# face_recognizer.train(faces_image_gray_list, np.array(class_id_list))
+                # Deteksi bibir
+                detected_mouths = mouth_cascade.detectMultiScale(img_gray, 1.5, 5)
+
+                if (len(detected_mouths) == 0):
+
+                    print(image, "Mask detected")
+
+                else:
+
+                    for mouth_rectangle in detected_mouths:
+
+                        mx, my, mh, mw = mouth_rectangle
+
+                        mouth_image_gray = faces_image_gray[my:my + mh, mx:mx + mw]
+                        mouth_image_gray_list.append(mouth_image_gray)
+
+                        if (y < my < y + h):
+
+                            print(image, "No mask found");
+                            # cv2.putText(img, "No mask found", (30, 30), cv2.FONT_HERSHEY_PLAIN, 1.2, (0, 255, 0), 1)
+                            
+                            # cv2.imshow("Result", img)
+                            # cv2.waitKey(0)
+
+
+face_recognizer = cv2.face.LBPHFaceRecognizer_create()
+face_recognizer.train(faces_image_gray_list, np.array(class_id_list))
+
+mouth_recognizer = cv2.mouth.LBPH
                 
 # Read test image
 # test_image_path = "assets/test/"
