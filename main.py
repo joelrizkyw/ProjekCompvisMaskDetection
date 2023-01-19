@@ -11,14 +11,14 @@ upper_body = cv2.CascadeClassifier('haarcascades\haarcascade_upperbody.xml')
 bw_threshold = 80
 
 # User message
-font = cv2.FONT_HERSHEY_SIMPLEX
+font = cv2.FONT_HERSHEY_PLAIN
 org = (30, 30)
 weared_mask_font_color = (0, 255, 0)
 not_weared_mask_font_color = (0, 0, 255)
 thickness = 2
-font_scale = 1
-weared_mask = "Thank You for wearing MASK"
-not_weared_mask = "Please wear MASK to defeat Corona"
+font_scale = 1.5
+weared_mask = "MASK Detected"
+not_weared_mask = "Use Your MASK!"
 
 # Read video
 cap = cv2.VideoCapture(0)
